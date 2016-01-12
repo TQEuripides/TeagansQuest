@@ -2,8 +2,14 @@ if(argument0!=obj_temp_Teagan_battle){ // If the object we are attacking is not 
 argument0.hp-=argument1
 obj_temp_Teagan_battle.image_index=0
 
-with(argument0){
-if(argument0.hp<=0){argument0.alive=false argument0.image_alpha=0}
+with(argument0)
+{
+    if(argument0.hp<=0)
+    {
+        argument0.alive=false; 
+        global.button--;
+        argument0.image_alpha=0;
+    }
 }
 
 dmg_=instance_create(argument0.x +100,argument0.y,show_damage);

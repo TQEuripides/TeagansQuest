@@ -60,6 +60,9 @@ ally_turn = true;
 enemy_turn = false;
 timer = 0;
 turn_counter = 0;
+
+ending = false; //boolean flag to check if the current battle phase is over
+                //it won't check for dead enemies while the battle is over
 </string>
           </argument>
         </arguments>
@@ -112,30 +115,46 @@ if (keyboard_check_pressed(vk_down)){ // Move down in Menu
           <argument>
             <kind>1</kind>
             <string>///Checking for dead enemies
+
+//old method (depreciated)
+/*
 if(timer &gt; 100)
 {
-for(i=0;i&lt;global.enemy_n;i+=1)
+for(i=0;i&lt; ds_list_size(global.enemy);i+=1)
 { // Check for all avaible enemies
 
 //if(global.enemy[i].alive=true&amp;&amp;global.enemy[i].time=true&amp;&amp;global.que=0){global.enemy[i].image_index=0 global.que=1 scr_damage(obj_player,global.enemy[i].dmg); global.enemy[i].time=false; global.enemy[i].alarm[0]=global.enc_en_freq+irandom(100)} // Check if enemy[i] is ready to attack
-    if(global.enemy[i] != 0)
-    {
-    if (global.enemy[i].alive=false&amp;&amp;global.enemy[i].checked=false)
+   
+    check_enemy = ds_list_find_value(global.enemy, i);
+    
+    if (check_enemy.alive=false &amp;&amp; check_enemy.checked=false)
     { // Check if enemy[i] is dead
     
         show_debug_message("an enemy has been found dead");
         dead_n+=1; // Add to number of dead enemies
-        global.enemy[i].checked=true; // don't check for this enemy anymore
+        check_enemy.checked=true; // don't check for this enemy anymore
         if(dead_n&gt;=global.enemy_n)
         { // If all enemies are defeated 
             instance_create(0,0,obj_notice);
         }
     }
-    }
+    
 }
 }
 
 timer++;
+*/
+
+if(ending == false)
+{
+    if (ds_list_empty(global.enemy))            //if the ds list is empty
+    {
+        ending = true;
+        ds_list_destroy(global.enemy);
+        instance_create(0,0, obj_notice);
+    }
+}
+
 </string>
           </argument>
         </arguments>
@@ -157,7 +176,9 @@ timer++;
           <argument>
             <kind>1</kind>
             <string>///Handling turns
-enemy_turns = instance_number(obj_enemy);
+if(ending == false)
+{
+enemy_turns = ds_list_size(global.enemy);
 if (ally_turn == true &amp;&amp; turn_counter &gt;= ally_turns)        //if it's ally turn and turns are used up
 {
     show_debug_message("It is now the enemy's turn");
@@ -184,37 +205,13 @@ if (ally_turn == true &amp;&amp; !instance_exists(draw_menu))
 //handler for enemy turns
 else if (enemy_turn == true)
 {
-    if(global.enemy[turn_counter].alive == false)
-    {
-        turn_counter++;
-    }
-    else
-    {
-        global.enemy[turn_counter].isTurn = true;
-    }
-}
+    enemy_turn_temp = ds_list_find_value(global.enemy, turn_counter);
+    
+    enemy_turn_temp.isTurn = true;
 
+}
+}
 </string>
-          </argument>
-        </arguments>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string></string>
           </argument>
         </arguments>
       </action>

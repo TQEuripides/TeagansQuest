@@ -80,14 +80,16 @@ depth = -1000000;   //want to ensure this is always drawn on top
         
         else if(global.menu_n=2)
         { // Attack Enemy[i]
-            for(i=0;i&lt;global.enemy_n;i+=1)
+            for(i=0;i&lt; ds_list_size(global.enemy);i+=1)
             {
                 if( global.button == i)
                 {
                     //with(global.enemy[i])
                     {
+                    
+                        target_enemy = ds_list_find_value(global.enemy, i);
                         //deal the actual damage
-                        scr_damage(global.enemy[global.button],global.player_dmg+irandom(4)); 
+                        scr_damage(target_enemy,global.player_dmg+irandom(4)); 
                         
                         //tell battle control turn is over
                         obj_battle_controller.turn_counter++;
@@ -110,11 +112,11 @@ depth = -1000000;   //want to ensure this is always drawn on top
 //if(attack_nxt=1&amp;&amp;global.que=0&amp;&amp;global.player_time&gt;=global.player_ttattack){attack_nxt=0 global.que=1 global.player_time=0 with(global.enemy[to_attack]){scr_damage(self,global.player_dmg+irandom(4));}}
 
 if(global.menu_n!=2){
-    if(global.button&gt;2){global.button=2}
-    if(global.button&lt;0){global.button=0}
-    }else{
-    if(global.button&gt;global.max_enemies){global.button=global.max_enemies}
-    if(global.button&lt;0){global.button=0}
+if(global.button&gt;2){global.button=2}
+if(global.button&lt;0){global.button=0}
+}else{
+if(global.button&gt;global.max_enemies){global.button=global.max_enemies}
+if(global.button&lt;0){global.button=0}
 }
 </string>
           </argument>
@@ -158,12 +160,13 @@ if(global.button=2){menu_string_0[2]= "Empty &lt;-";}else{menu_string_0[2]= "Emp
 //this handles drawing the arrows in front of the arrows in order to target them
 else if(global.menu_n=2)
 {
-    for(i=0;i&lt;global.enemy_n;i+=1)
+    for(i=0;i&lt; ds_list_size(global.enemy);i+=1)
     {
-        if (global.enemy[i] != 0)
-        {
-        if (global.enemy[i].alive == true)
-        {
+      
+        temp_enemy = ds_list_find_value(global.enemy, i);
+        
+       // if (temp_enemy.alive == true)
+        //{
             if(global.button=i)
             {
                 menu_string_0[i]= " &lt;-";
@@ -174,10 +177,10 @@ else if(global.menu_n=2)
             }
 
             draw_set_color(c_black);
-            draw_text(global.enemy[i].x+(string_length(menu_string_0[i])+128),global.enemy[i].y,menu_string_0[i]);
+            draw_text(temp_enemy.x+(string_length(menu_string_0[i])+128),temp_enemy.y,menu_string_0[i]);
             draw_set_color(c_white);
-        }
-        }
+        //}
+        
     }
 }
 
